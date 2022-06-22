@@ -47,7 +47,7 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Mutation struct {
 		Flamingo   func(childComplexity int) int
-		SetCatched func(childComplexity int, id string, catched bool) int
+		SetCatched func(childComplexity int, id int, catched bool) int
 	}
 
 	Pokemon struct {
@@ -59,7 +59,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Flamingo     func(childComplexity int) int
-		Pokemon      func(childComplexity int, ids []string, catched *bool) int
+		Pokemon      func(childComplexity int, ids []int, catched *bool) int
 		Total        func(childComplexity int) int
 		TotalCatched func(childComplexity int) int
 	}
@@ -67,11 +67,11 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Flamingo(ctx context.Context) (*string, error)
-	SetCatched(ctx context.Context, id string, catched bool) (*pokedex.Pokemon, error)
+	SetCatched(ctx context.Context, id int, catched bool) (*pokedex.Pokemon, error)
 }
 type QueryResolver interface {
 	Flamingo(ctx context.Context) (*string, error)
-	Pokemon(ctx context.Context, ids []string, catched *bool) ([]*pokedex.Pokemon, error)
+	Pokemon(ctx context.Context, ids []int, catched *bool) ([]*pokedex.Pokemon, error)
 	Total(ctx context.Context) (int, error)
 	TotalCatched(ctx context.Context) (int, error)
 }
@@ -108,7 +108,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SetCatched(childComplexity, args["id"].(string), args["catched"].(bool)), true
+		return e.complexity.Mutation.SetCatched(childComplexity, args["id"].(int), args["catched"].(bool)), true
 
 	case "Pokemon.catched":
 		if e.complexity.Pokemon.Catched == nil {
@@ -155,7 +155,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Pokemon(childComplexity, args["ids"].([]string), args["catched"].(*bool)), true
+		return e.complexity.Query.Pokemon(childComplexity, args["ids"].([]int), args["catched"].(*bool)), true
 
 	case "Query.total":
 		if e.complexity.Query.Total == nil {
@@ -261,10 +261,10 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_setCatched_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
+	var arg0 int
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -300,10 +300,10 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_pokemon_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 []string
+	var arg0 []int
 	if tmp, ok := rawArgs["ids"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ids"))
-		arg0, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚕintᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -414,7 +414,7 @@ func (ec *executionContext) _Mutation_setCatched(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SetCatched(rctx, fc.Args["id"].(string), fc.Args["catched"].(bool))
+		return ec.resolvers.Mutation().SetCatched(rctx, fc.Args["id"].(int), fc.Args["catched"].(bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -493,7 +493,7 @@ func (ec *executionContext) _Pokemon_id(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNID2int(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Pokemon_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -503,7 +503,7 @@ func (ec *executionContext) fieldContext_Pokemon_id(ctx context.Context, field g
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -696,7 +696,7 @@ func (ec *executionContext) _Query_pokemon(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Pokemon(rctx, fc.Args["ids"].([]string), fc.Args["catched"].(*bool))
+		return ec.resolvers.Query().Pokemon(rctx, fc.Args["ids"].([]int), fc.Args["catched"].(*bool))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3297,36 +3297,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNID2int(ctx context.Context, v interface{}) (int, error) {
-	res, err := graphql.UnmarshalIntID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNID2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
-	res := graphql.MarshalIntID(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
-	res, err := graphql.UnmarshalID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalID(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
 	res, err := graphql.UnmarshalInt(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -3682,6 +3652,44 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
+func (ec *executionContext) unmarshalOInt2ᚕintᚄ(ctx context.Context, v interface{}) ([]int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]int, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNInt2int(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOInt2ᚕintᚄ(ctx context.Context, sel ast.SelectionSet, v []int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNInt2int(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalOPokemon2ᚕᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemonᚄ(ctx context.Context, sel ast.SelectionSet, v []*pokedex.Pokemon) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -3719,44 +3727,6 @@ func (ec *executionContext) marshalOPokemon2ᚕᚖgithubᚗcomᚋaoepeopleᚋpok
 
 	}
 	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNString2string(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalNString2string(ctx, sel, v[i])
-	}
 
 	for _, e := range ret {
 		if e == graphql.Null {

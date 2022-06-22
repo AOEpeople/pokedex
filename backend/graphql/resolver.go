@@ -36,7 +36,7 @@ func (r *rootResolver) Query() QueryResolver {
 
 type rootResolverMutation struct {
 	resolveFlamingo   func(ctx context.Context) (*string, error)
-	resolveSetCatched func(ctx context.Context, id string, catched bool) (*pokedex.Pokemon, error)
+	resolveSetCatched func(ctx context.Context, id int, catched bool) (*pokedex.Pokemon, error)
 }
 
 func (r *rootResolverMutation) Inject(
@@ -50,13 +50,13 @@ func (r *rootResolverMutation) Inject(
 func (r *rootResolverMutation) Flamingo(ctx context.Context) (*string, error) {
 	return r.resolveFlamingo(ctx)
 }
-func (r *rootResolverMutation) SetCatched(ctx context.Context, id string, catched bool) (*pokedex.Pokemon, error) {
+func (r *rootResolverMutation) SetCatched(ctx context.Context, id int, catched bool) (*pokedex.Pokemon, error) {
 	return r.resolveSetCatched(ctx, id, catched)
 }
 
 type rootResolverQuery struct {
 	resolveFlamingo     func(ctx context.Context) (*string, error)
-	resolvePokemon      func(ctx context.Context, ids []string, catched *bool) ([]*pokedex.Pokemon, error)
+	resolvePokemon      func(ctx context.Context, ids []int, catched *bool) ([]*pokedex.Pokemon, error)
 	resolveTotal        func(ctx context.Context) (int, error)
 	resolveTotalCatched func(ctx context.Context) (int, error)
 }
@@ -76,7 +76,7 @@ func (r *rootResolverQuery) Inject(
 func (r *rootResolverQuery) Flamingo(ctx context.Context) (*string, error) {
 	return r.resolveFlamingo(ctx)
 }
-func (r *rootResolverQuery) Pokemon(ctx context.Context, ids []string, catched *bool) ([]*pokedex.Pokemon, error) {
+func (r *rootResolverQuery) Pokemon(ctx context.Context, ids []int, catched *bool) ([]*pokedex.Pokemon, error) {
 	return r.resolvePokemon(ctx, ids, catched)
 }
 func (r *rootResolverQuery) Total(ctx context.Context) (int, error) {
