@@ -9,6 +9,7 @@ Run the backend:
 $ cd backend
 $ go run . serve
 ```
+
 http://localhost:3322/graphql-console
 
 ## Frontend
@@ -25,3 +26,5 @@ $ npm install
 $ npm run dev
 ```
 (if `npm run dev` errors after the first time you run it, just re-run the command)
+
+http://localhost:3000/
