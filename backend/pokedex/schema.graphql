@@ -1,0 +1,16 @@
+type Pokemon {
+    id: ID!
+    name: String!
+    type: [String!]!
+    catched: Boolean!
+}
+
+extend type Query {
+    pokemon(ids: [String!], catched: Boolean): [Pokemon!]
+    total: Int!
+    totalCatched: Int!
+}
+
+extend type Mutation {
+    setCatched(id: ID!, catched: Boolean!): Pokemon!
+}
