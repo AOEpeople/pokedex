@@ -5,6 +5,8 @@ query getPokemon {
         type
         catched
     }
+    total
+    totalCatched
 }
 
 mutation setCatched($id: Int!, $catched: Boolean! ) {

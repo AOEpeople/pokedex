@@ -61,6 +61,8 @@ export type GetPokemonQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GetPokemonQuery = {
   __typename?: "Query";
+  total: number;
+  totalCatched: number;
   pokemon?: Array<{
     __typename?: "Pokemon";
     id: number;
@@ -88,6 +90,8 @@ export const GetPokemonDocument = gql`
       type
       catched
     }
+    total
+    totalCatched
   }
 `;
 export const SetCatchedDocument = gql`

@@ -3,29 +3,16 @@ import { useLoaderData } from "@remix-run/react";
 import { zfd } from "zod-form-data";
 
 import { Card } from "~/components/Card";
-
-interface LoaderData {
-  pokemon: Array<{ id: string; name: string; isCatched: boolean }>;
-  total: number;
-  catched: number;
-}
+import { graphqlClient } from "~/graphql/index.server";
+import { GetPokemonQuery } from "~/graphql/sdk";
 
 const schema = zfd.formData({
-  id: zfd.text(),
-  isCatched: zfd.checkbox(),
+  id: zfd.numeric(),
+  catched: zfd.checkbox(),
 });
 
 export const loader: LoaderFunction = async ({}) => {
-  // @todo - replace with graphql query
-  return json<LoaderData>({
-    pokemon: [
-      { id: "1", name: "Bisasam", isCatched: false },
-      { id: "2", name: "Bisaknosp", isCatched: false },
-      { id: "3", name: "Bisaflor", isCatched: true },
-    ],
-    total: 3,
-    catched: 1,
-  });
+  return graphqlClient.getPokemon();
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -37,7 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Index() {
-  const { pokemon, total, catched } = useLoaderData<LoaderData>();
+  const { pokemon, total, totalCatched } = useLoaderData<GetPokemonQuery>();
 
   return (
     <div className="max-w-4xl my-14 px-8 mx-auto">
@@ -49,12 +36,17 @@ export default function Index() {
       </h1>
 
       <p className="text-right mb-4 text-sm">
-        {catched} von {total} gefangen!
+        {totalCatched} von {total} gefangen!
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {pokemon.map((p) => (
-          <Card key={p.id} {...p} />
+        {pokemon?.map((p) => (
+          <Card
+            key={p.id}
+            name={p.name}
+            catched={p.catched}
+            id={p.id.toString()}
+          />
         ))}
       </div>
     </div>
