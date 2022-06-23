@@ -703,11 +703,14 @@ func (ec *executionContext) _Query_pokemon(ctx context.Context, field graphql.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*pokedex.Pokemon)
 	fc.Result = res
-	return ec.marshalOPokemon2ᚕᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemonᚄ(ctx, field.Selections, res)
+	return ec.marshalNPokemon2ᚕᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemonᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_pokemon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2885,6 +2888,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_pokemon(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -3316,6 +3322,50 @@ func (ec *executionContext) marshalNPokemon2githubᚗcomᚋaoepeopleᚋpokedex�
 	return ec._Pokemon(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNPokemon2ᚕᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemonᚄ(ctx context.Context, sel ast.SelectionSet, v []*pokedex.Pokemon) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPokemon2ᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemon(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNPokemon2ᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemon(ctx context.Context, sel ast.SelectionSet, v *pokedex.Pokemon) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -3680,53 +3730,6 @@ func (ec *executionContext) marshalOInt2ᚕintᚄ(ctx context.Context, sel ast.S
 	for i := range v {
 		ret[i] = ec.marshalNInt2int(ctx, sel, v[i])
 	}
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalOPokemon2ᚕᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemonᚄ(ctx context.Context, sel ast.SelectionSet, v []*pokedex.Pokemon) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNPokemon2ᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemon(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
 
 	for _, e := range ret {
 		if e == graphql.Null {

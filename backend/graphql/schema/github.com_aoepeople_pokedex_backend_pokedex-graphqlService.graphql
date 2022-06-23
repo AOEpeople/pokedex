@@ -6,7 +6,7 @@ type Pokemon {
 }
 
 extend type Query {
-    pokemon(ids: [Int!], catched: Boolean): [Pokemon!]
+    pokemon(ids: [Int!], catched: Boolean): [Pokemon!]!
     total: Int!
     totalCatched: Int!
 }
