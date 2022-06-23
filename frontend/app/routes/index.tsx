@@ -38,12 +38,7 @@ export default function Index() {
 
       <div className="list">
         {pokemon?.map((p) => (
-          <Card
-            key={p.id}
-            name={p.name}
-            catched={p.catched}
-            id={p.id.toString()}
-          />
+          <Card key={p.id} {...p} />
         ))}
       </div>
     </div>

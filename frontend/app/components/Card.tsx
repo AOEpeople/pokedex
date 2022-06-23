@@ -1,24 +1,17 @@
-import { Form, useSubmit, useTransition } from "@remix-run/react";
+import { Form, useSubmit } from "@remix-run/react";
 
 interface CardProps {
-  id: string;
+  id: number;
   name: string;
   catched: boolean;
 }
 
 export const Card = ({ id, name, catched }: CardProps) => {
   const submit = useSubmit();
-  const transition = useTransition();
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
   return (
-    <Form
-      method="post"
-      replace={false}
-      className={`card ${
-        transition.submission?.formData.get("id") === id ? "opacity-25" : ""
-      }`}
-    >
+    <Form method="post" replace={false} className="card">
       <input type="hidden" name="id" value={id} />
       <input
         id={`${name}-catched`}
