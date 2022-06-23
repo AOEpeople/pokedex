@@ -1,0 +1,12 @@
+{
+  "name": "Pokedex Schema",
+  "schemaPath": "./app/graphql/__generated__/schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Pokedex BFF GraphQL": {
+        "url": "http://localhost:3322/graphql",
+        "introspect": true
+      }
+    }
+  }
+}

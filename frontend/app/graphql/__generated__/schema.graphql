@@ -1,0 +1,31 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Mutation {
+    flamingo: String
+    setCatched(catched: Boolean!, id: Int!): Pokemon!
+}
+
+type Pokemon {
+    catched: Boolean!
+    id: Int!
+    name: String!
+    type: [String!]!
+}
+
+type Query {
+    flamingo: String
+    pokemon(catched: Boolean, ids: [Int!]): [Pokemon!]
+    total: Int!
+    totalCatched: Int!
+}
+
+scalar Date
+
+scalar Map
+
+scalar Time

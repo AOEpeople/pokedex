@@ -10,6 +10,8 @@
     "dev:css": "npm run generate:css -- --watch",
     "dev:remix": "remix dev",
     "generate:css": "npx tailwindcss -i ./styles/tailwind.css -o ./app/tailwind.css",
+    "generate:graphql": "graphql-codegen --config codegen.yml",
+    "postgenerate:graphql": "prettier --write --ignore-unknown app/graphql/sdk.ts",
     "start": "remix-serve build",
     "prepare": "cd .. && husky install frontend/.husky"
   },
@@ -27,6 +29,10 @@
     "zod-form-data": "1.2.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/typescript": "2.5.1",
+    "@graphql-codegen/typescript-graphql-request": "4.4.10",
+    "@graphql-codegen/typescript-operations": "2.4.2",
     "@remix-run/dev": "^1.5.1",
     "@remix-run/eslint-config": "^1.5.1",
     "@tailwindcss/forms": "0.5.2",

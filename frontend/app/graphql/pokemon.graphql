@@ -1,0 +1,14 @@
+query getPokemon {
+    pokemon {
+        id
+        name
+        type
+        catched
+    }
+}
+
+mutation setCatched($id: Int!, $catched: Boolean! ) {
+    setCatched(catched: $catched, id: $id) {
+        id
+    }
+}
