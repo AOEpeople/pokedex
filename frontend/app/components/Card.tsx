@@ -15,14 +15,14 @@ export const Card = ({ id, name, catched }: CardProps) => {
     <Form
       method="post"
       replace={false}
-      className={`p-4 bg-gray-100 transition-all duration-300 rounded-lg relative text-center ${
+      className={`card ${
         transition.submission?.formData.get("id") === id ? "opacity-25" : ""
       }`}
     >
       <input type="hidden" name="id" value={id} />
       <input
         id={`${name}-catched`}
-        className="absolute top-5 right-5 rounded-full border-gray-300 text-red-500 shadow-sm focus:border-red-300 focus:ring focus:ring-offset-0 focus:ring-red-200 focus:ring-opacity-50"
+        className="checkbox"
         type="checkbox"
         name="catched"
         defaultChecked={catched}

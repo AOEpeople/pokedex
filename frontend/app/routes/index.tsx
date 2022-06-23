@@ -27,19 +27,16 @@ export default function Index() {
   const { pokemon, total, totalCatched } = useLoaderData<GetPokemonQuery>();
 
   return (
-    <div className="max-w-4xl my-14 px-8 mx-auto">
-      <h1 className="text-center mb-10 text-5xl font-extrabold tracking-tighter">
-        AOE{" "}
-        <span className="relative after:absolute after:left-0 after:bottom-[4px] after:-z-10 after:w-full after:h-3 after:bg-red-400">
-          Pokedex
-        </span>
+    <div className="container">
+      <h1 className="headline">
+        AOE <span className="highlight">Pokedex</span>
       </h1>
 
-      <p className="text-right mb-4 text-sm">
+      <p className="info">
         {totalCatched} von {total} gefangen!
       </p>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <div className="list">
         {pokemon?.map((p) => (
           <Card
             key={p.id}
