@@ -19,7 +19,7 @@ type Pokemon {
 
 type Query {
     flamingo: String
-    pokemon(catched: Boolean, ids: [Int!]): [Pokemon!]
+    pokemon(catched: Boolean, ids: [Int!]): [Pokemon!]!
     total: Int!
     totalCatched: Int!
 }

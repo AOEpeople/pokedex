@@ -47,7 +47,7 @@ export type Pokemon = {
 export type Query = {
   __typename?: "Query";
   flamingo?: Maybe<Scalars["String"]>;
-  pokemon?: Maybe<Array<Pokemon>>;
+  pokemon: Array<Pokemon>;
   total: Scalars["Int"];
   totalCatched: Scalars["Int"];
 };
@@ -63,13 +63,13 @@ export type GetPokemonQuery = {
   __typename?: "Query";
   total: number;
   totalCatched: number;
-  pokemon?: Array<{
+  pokemon: Array<{
     __typename?: "Pokemon";
     id: number;
     name: string;
     type: Array<string>;
     catched: boolean;
-  }> | null;
+  }>;
 };
 
 export type SetCatchedMutationVariables = Exact<{

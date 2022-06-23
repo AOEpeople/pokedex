@@ -37,7 +37,7 @@ export default function Index() {
       </p>
 
       <div className="list">
-        {pokemon?.map((p) => (
+        {pokemon.map((p) => (
           <Card key={p.id} {...p} />
         ))}
       </div>
