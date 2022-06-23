@@ -1,12 +1,8 @@
 import { Form, useSubmit } from "@remix-run/react";
 
-interface CardProps {
-  id: number;
-  name: string;
-  catched: boolean;
-}
+import { Pokemon } from "~/graphql/sdk";
 
-export const Card = ({ id, name, catched }: CardProps) => {
+export const Card = ({ id, name, catched }: Pokemon) => {
   const submit = useSubmit();
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
