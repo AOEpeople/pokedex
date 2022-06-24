@@ -67,7 +67,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Flamingo(ctx context.Context) (*string, error)
-	SetCatched(ctx context.Context, id int, catched bool) (*pokedex.Pokemon, error)
+	SetCatched(ctx context.Context, id int, catched bool) (int, error)
 }
 type QueryResolver interface {
 	Flamingo(ctx context.Context) (*string, error)
@@ -426,9 +426,9 @@ func (ec *executionContext) _Mutation_setCatched(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*pokedex.Pokemon)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNPokemon2ᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemon(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_setCatched(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -438,17 +438,7 @@ func (ec *executionContext) fieldContext_Mutation_setCatched(ctx context.Context
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Pokemon_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Pokemon_name(ctx, field)
-			case "type":
-				return ec.fieldContext_Pokemon_type(ctx, field)
-			case "catched":
-				return ec.fieldContext_Pokemon_catched(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Pokemon", field.Name)
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	defer func() {
@@ -3316,10 +3306,6 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNPokemon2githubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemon(ctx context.Context, sel ast.SelectionSet, v pokedex.Pokemon) graphql.Marshaler {
-	return ec._Pokemon(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNPokemon2ᚕᚖgithubᚗcomᚋaoepeopleᚋpokedexᚋbackendᚋpokedexᚐPokemonᚄ(ctx context.Context, sel ast.SelectionSet, v []*pokedex.Pokemon) graphql.Marshaler {

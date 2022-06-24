@@ -77,6 +77,6 @@ func (resolver *Resolver) TotalCatched(ctx context.Context) (int, error) {
 	return 0, nil
 }
 
-func (resolver *Resolver) SetCatched(ctx context.Context, id int, catched bool) (*Pokemon, error) {
-	return nil, nil
+func (resolver *Resolver) SetCatched(ctx context.Context, id int, catched bool) (int, error) {
+	return 0, nil
 }

@@ -12,5 +12,5 @@ extend type Query {
 }
 
 extend type Mutation {
-    setCatched(id: Int!, catched: Boolean!): Pokemon!
+    setCatched(id: Int!, catched: Boolean!): Int!
 }

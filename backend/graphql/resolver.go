@@ -36,7 +36,7 @@ func (r *rootResolver) Query() QueryResolver {
 
 type rootResolverMutation struct {
 	resolveFlamingo   func(ctx context.Context) (*string, error)
-	resolveSetCatched func(ctx context.Context, id int, catched bool) (*pokedex.Pokemon, error)
+	resolveSetCatched func(ctx context.Context, id int, catched bool) (int, error)
 }
 
 func (r *rootResolverMutation) Inject(
@@ -50,7 +50,7 @@ func (r *rootResolverMutation) Inject(
 func (r *rootResolverMutation) Flamingo(ctx context.Context) (*string, error) {
 	return r.resolveFlamingo(ctx)
 }
-func (r *rootResolverMutation) SetCatched(ctx context.Context, id int, catched bool) (*pokedex.Pokemon, error) {
+func (r *rootResolverMutation) SetCatched(ctx context.Context, id int, catched bool) (int, error) {
 	return r.resolveSetCatched(ctx, id, catched)
 }
 
