@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
 } from "@remix-run/react";
 
 import styles from "./tailwind.css";
@@ -40,10 +41,42 @@ export default function App() {
             </g>
           </g>
         </svg>
-        <Outlet />
+        <div className="container">
+          <h1 className="headline">
+            AOE <span className="highlight">Pokedex</span>
+          </h1>
+          <Outlet />
+        </div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+      </body>
+    </html>
+  );
+}
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return (
+    <html>
+      <head>
+        <title>Oops!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <div className="container">
+          <h1 className="headline">
+            AOE <span className="highlight">Pokedex</span>
+          </h1>
+
+          <div className="bg-red-50 p-4">
+            <p className="font-bold">{caught.status}</p>
+            <p>{caught.data}</p>
+          </div>
+        </div>
+        <Scripts />
       </body>
     </html>
   );

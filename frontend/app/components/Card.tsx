@@ -7,7 +7,7 @@ export const Card = ({ id, name, catched }: Pokemon) => {
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
   return (
-    <Form method="post" replace={false} className="card">
+    <Form method="post" className="card">
       <input type="hidden" name="id" value={id} />
       <input
         id={`${name}-catched`}

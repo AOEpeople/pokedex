@@ -12,7 +12,12 @@ const schema = zfd.formData({
 });
 
 export const loader: LoaderFunction = async ({}) => {
-  return graphqlClient.getPokemon();
+  try {
+    const data = await graphqlClient.getPokemon();
+    return json(data);
+  } catch {
+    throw new Response("Es ist ein Fehler aufgetreten", { status: 500 });
+  }
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -27,11 +32,7 @@ export default function Index() {
   const { pokemon, total, totalCatched } = useLoaderData<GetPokemonQuery>();
 
   return (
-    <div className="container">
-      <h1 className="headline">
-        AOE <span className="highlight">Pokedex</span>
-      </h1>
-
+    <>
       <p className="info">
         {totalCatched} von {total} gefangen!
       </p>
@@ -41,6 +42,6 @@ export default function Index() {
           <Card key={p.id} {...p} />
         ))}
       </div>
-    </div>
+    </>
   );
 }
