@@ -28,7 +28,7 @@ export type Scalars = {
 export type Mutation = {
   __typename?: "Mutation";
   flamingo?: Maybe<Scalars["String"]>;
-  setCatched: Pokemon;
+  setCatched: Scalars["Int"];
 };
 
 export type MutationSetCatchedArgs = {
@@ -79,7 +79,7 @@ export type SetCatchedMutationVariables = Exact<{
 
 export type SetCatchedMutation = {
   __typename?: "Mutation";
-  setCatched: { __typename?: "Pokemon"; id: number };
+  setCatched: number;
 };
 
 export const GetPokemonDocument = gql`
@@ -96,9 +96,7 @@ export const GetPokemonDocument = gql`
 `;
 export const SetCatchedDocument = gql`
   mutation setCatched($id: Int!, $catched: Boolean!) {
-    setCatched(catched: $catched, id: $id) {
-      id
-    }
+    setCatched(catched: $catched, id: $id)
   }
 `;
 

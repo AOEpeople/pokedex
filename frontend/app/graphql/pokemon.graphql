@@ -10,7 +10,5 @@ query getPokemon {
 }
 
 mutation setCatched($id: Int!, $catched: Boolean! ) {
-    setCatched(catched: $catched, id: $id) {
-        id
-    }
+    setCatched(catched: $catched, id: $id)
 }

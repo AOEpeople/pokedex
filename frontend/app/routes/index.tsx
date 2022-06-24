@@ -11,9 +11,10 @@ const schema = zfd.formData({
   catched: zfd.checkbox(),
 });
 
-export const loader: LoaderFunction = async ({}) => {
+export const loader: LoaderFunction = async () => {
   try {
     const data = await graphqlClient.getPokemon();
+
     return json(data);
   } catch {
     throw new Response("Es ist ein Fehler aufgetreten", { status: 500 });
@@ -21,10 +22,13 @@ export const loader: LoaderFunction = async ({}) => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const formData = schema.parse(await request.formData());
+  const { id, catched } = schema.parse(await request.formData());
 
-  // @ todo - replace ith graphql mutation
-  console.log(formData);
+  await graphqlClient.setCatched({
+    id,
+    catched,
+  });
+
   return json({});
 };
 
