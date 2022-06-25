@@ -53,6 +53,23 @@ func fetchPokemonList(ctx context.Context, url string) ([]*Pokemon, error) {
 	return list.Sort(pokemons, func(l, r *Pokemon) bool { return l.ID < r.ID }), nil
 }
 
+func initCatched() map[int]bool {
+	return make(map[int]bool, 151)
+}
+
+var catched = initCatched()
+
+func setCatched(id int) {
+	if id <= 0 || id > 151 {
+		return
+	}
+	catched[id] = true
+}
+
+func unsetCatched(id int) {
+	delete(catched, id)
+}
+
 func fetchPokemon(ctx context.Context, url string) (*Pokemon, error) {
 	type pokemonTypeDto struct {
 		Type struct {
@@ -77,6 +94,7 @@ func fetchPokemon(ctx context.Context, url string) (*Pokemon, error) {
 		Type: list.Map(pokemon.Types, func(typ pokemonTypeDto) string {
 			return typ.Type.Name
 		}),
+		Catched: catched[pokemon.ID],
 	}, nil
 }
 

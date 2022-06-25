@@ -74,9 +74,14 @@ func (resolver *Resolver) Total(ctx context.Context) (int, error) {
 }
 
 func (resolver *Resolver) TotalCatched(ctx context.Context) (int, error) {
-	return 0, nil
+	return len(catched), nil
 }
 
 func (resolver *Resolver) SetCatched(ctx context.Context, id int, catched bool) (int, error) {
-	return 0, nil
+	if catched {
+		setCatched(id)
+	} else {
+		unsetCatched(id)
+	}
+	return resolver.TotalCatched(ctx)
 }
