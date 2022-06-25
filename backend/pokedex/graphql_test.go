@@ -68,31 +68,75 @@ func TestResolver(t *testing.T) {
 		assert.Equal(t, 5, pokemon[1].ID)
 		assert.Equal(t, 7, pokemon[2].ID)
 
+		catched = initCatched()
+
 		var catched = true
 		pokemon, err = resolver.Pokemon(context.Background(), nil, &catched)
 		assert.NoError(t, err)
 		assert.Len(t, pokemon, 0)
 
+		setCatched(1)
+		setCatched(2)
+		setCatched(3)
+		pokemon, err = resolver.Pokemon(context.Background(), nil, &catched)
+		assert.NoError(t, err)
+		assert.Len(t, pokemon, 3)
+
 		catched = false
 		pokemon, err = resolver.Pokemon(context.Background(), nil, &catched)
 		assert.NoError(t, err)
-		assert.Len(t, pokemon, 151)
+		assert.Len(t, pokemon, 151-3)
 	})
 
 	t.Run("Total", func(t *testing.T) {
 		total, err := resolver.Total(context.Background())
 		assert.NoError(t, err)
-		assert.Equal(t, total, 151)
+		assert.Equal(t, 151, total)
 	})
 
 	t.Run("TotalCatched", func(t *testing.T) {
+		catched = initCatched()
+
 		total, err := resolver.TotalCatched(context.Background())
 		assert.NoError(t, err)
-		assert.Equal(t, total, 0)
+		assert.Equal(t, 0, total)
+
+		setCatched(10)
+		setCatched(11)
+		setCatched(12)
+		setCatched(200)
+		total, err = resolver.TotalCatched(context.Background())
+		assert.NoError(t, err)
+		assert.Equal(t, 3, total)
+
+		unsetCatched(13)
+		total, err = resolver.TotalCatched(context.Background())
+		assert.NoError(t, err)
+		assert.Equal(t, 3, total)
+
+		unsetCatched(11)
+		unsetCatched(12)
+		total, err = resolver.TotalCatched(context.Background())
+		assert.NoError(t, err)
+		assert.Equal(t, 1, total)
 	})
 
 	t.Run("SetCatched", func(t *testing.T) {
-		_, err := resolver.SetCatched(context.Background(), 0, true)
+		catched = initCatched()
+
+		total, err := resolver.SetCatched(context.Background(), 0, true)
 		assert.NoError(t, err)
+		assert.Equal(t, 0, total)
+		assert.False(t, catched[0])
+
+		total, err = resolver.SetCatched(context.Background(), 20, true)
+		assert.NoError(t, err)
+		assert.Equal(t, 1, total)
+		assert.True(t, catched[20])
+
+		total, err = resolver.SetCatched(context.Background(), 20, false)
+		assert.NoError(t, err)
+		assert.Equal(t, 0, total)
+		assert.False(t, catched[20])
 	})
 }

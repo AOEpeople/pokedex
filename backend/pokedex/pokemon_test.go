@@ -56,6 +56,19 @@ func TestPokemon(t *testing.T) {
 		pokemon, err := fetchPokemon(context.Background(), testserver.URL+"/pokemon1")
 		assert.NoError(t, err)
 		assert.Equal(t, "test1", pokemon.Name)
+		assert.False(t, pokemon.Catched)
+
+		setCatched(1)
+		pokemon, err = fetchPokemon(context.Background(), testserver.URL+"/pokemon1")
+		assert.NoError(t, err)
+		assert.Equal(t, "test1", pokemon.Name)
+		assert.True(t, pokemon.Catched)
+
+		unsetCatched(1)
+		pokemon, err = fetchPokemon(context.Background(), testserver.URL+"/pokemon1")
+		assert.NoError(t, err)
+		assert.Equal(t, "test1", pokemon.Name)
+		assert.False(t, pokemon.Catched)
 	})
 
 	t.Run("fetchPokemonList", func(t *testing.T) {
