@@ -1,5 +1,7 @@
 # AOE Pokedex
 
+![Pokedex Screenshot](./screenshot.png)
+
 ## Backend
 * Flamingo
 * Graphql
