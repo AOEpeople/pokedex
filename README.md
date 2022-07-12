@@ -1,5 +1,7 @@
 # AOE Pokedex
 
+The AOE Pokedex is a demo project for demonstration purposes, using Remix+React, Flamingo, Github Actions, and more.
+
 ![Pokedex Screenshot](./screenshot.png)
 
 ## Backend
@@ -27,6 +29,10 @@ $ cd frontend
 $ npm install
 $ npm run dev
 ```
-(if `npm run dev` errors after the first time you run it, just re-run the command)
+(if `npm run dev` errors after the first time you run it, just re-run the command :-) )
 
 http://localhost:3000/
+
+## License
+This code is licensed under the [MIT License](LICENSE). Feel free to use, contribute or learn on this code.
+
